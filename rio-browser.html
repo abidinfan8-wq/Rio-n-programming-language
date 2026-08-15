@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>RIO — نسخة المتصفح</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Tajawal:wght@400;500;700;900&display=swap');
+
+  :root{
+    --bg:#0b1220;
+    --panel:#0f1a2e;
+    --panel-2:#111e35;
+    --line:#1e2f4d;
+    --river-1:#38bdf8;
+    --river-2:#0369a1;
+    --text:#e6edf7;
+    --text-dim:#8391ab;
+    --err:#f87171;
+    --ok:#4ade80;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 800px 400px at 15% -10%, rgba(56,189,248,.12), transparent),
+      var(--bg);
+    color:var(--text);
+    font-family:'Tajawal',sans-serif;
+    min-height:100vh;
+    padding:28px 20px 60px;
+  }
+
+  header{
+    max-width:1180px; margin:0 auto 22px; display:flex; align-items:center; gap:14px;
+  }
+  .logo-mark{
+    width:44px; height:44px; border-radius:50%; background:#0f172a;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    border:1px solid var(--line);
+  }
+  .logo-mark svg{width:30px; height:30px;}
+  header h1{
+    font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700;
+    letter-spacing:.5px;
+  }
+  header h1 span{
+    background:linear-gradient(135deg,var(--river-1),var(--river-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header p{color:var(--text-dim); font-size:13.5px; margin-top:2px;}
+
+  .wave{
+    max-width:1180px; margin:0 auto 22px; height:3px; border-radius:3px;
+    background:linear-gradient(90deg,var(--river-2),var(--river-1),var(--river-2));
+    background-size:200% 100%;
+    animation:flow 3.5s linear infinite;
+    opacity:.75;
+  }
+  @keyframes flow{ to{ background-position:-200% 0; } }
+
+  main{
+    max-width:1180px; margin:0 auto;
+    display:grid; grid-template-columns:1fr 1fr; gap:16px;
+  }
+  @media (max-width:860px){ main{grid-template-columns:1fr;} }
+
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    display:flex; flex-direction:column; overflow:hidden;
+    box-shadow:0 20px 50px -30px rgba(0,0,0,.6);
+  }
+  .panel-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:11px 16px; border-bottom:1px solid var(--line); background:var(--panel-2);
+  }
+  .panel-head h2{font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:.5px;}
+  .dots{display:flex; gap:6px;}
+  .dots span{width:9px; height:9px; border-radius:50%; background:var(--line);}
+
+  textarea{
+    flex:1; min-height:340px; background:transparent; color:var(--text);
+    border:none; outline:none; resize:vertical;
+    font-family:'JetBrains Mono',monospace; font-size:14.5px; line-height:1.65;
+    padding:16px; direction:ltr; text-align:left;
+  }
+
+  #output{
+    flex:1; min-height:340px; padding:16px; font-family:'JetBrains Mono',monospace;
+    font-size:13.5px; line-height:1.7; overflow:auto; direction:ltr; text-align:left;
+    white-space:pre-wrap; word-break:break-word;
+  }
+  #output .line-err{color:var(--err);}
+  #output .line-ok{color:var(--ok);}
+  #output .js-code{color:var(--text-dim); display:block; margin-bottom:10px; padding-bottom:10px; border-bottom:1px dashed var(--line);}
+
+  .controls{
+    max-width:1180px; margin:16px auto 0; display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  }
+  button{
+    font-family:'Tajawal',sans-serif; font-weight:700; font-size:14px;
+    padding:11px 22px; border-radius:10px; border:none; cursor:pointer;
+    background:linear-gradient(135deg,var(--river-1),var(--river-2)); color:#04121f;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  button:hover{transform:translateY(-1px); box-shadow:0 8px 20px -8px rgba(56,189,248,.6);}
+  button:active{transform:translateY(0);}
+
+  select{
+    font-family:'Tajawal',sans-serif; font-size:13.5px; background:var(--panel-2);
+    color:var(--text); border:1px solid var(--line); border-radius:10px; padding:10px 14px;
+    cursor:pointer;
+  }
+
+  .note{
+    max-width:1180px; margin:22px auto 0; color:var(--text-dim); font-size:12.5px;
+    border-top:1px solid var(--line); padding-top:16px; line-height:1.8;
+  }
+  .note b{color:var(--text);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">
+    <svg viewBox="0 0 360 360"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient></defs>
+    <path d="M 70 150 Q 130 110, 180 150 T 290 150 Q 320 165, 290 195 Q 230 235, 180 195 T 70 195 Q 40 165, 70 150 Z" fill="url(#g)"/></svg>
+  </div>
+  <div>
+    <h1>RIO <span>// نسخة المتصفح</span></h1>
+    <p>يترجم RIO إلى JavaScript ويشغّلها هنا مباشرة — بدون تنصيب أي شيء</p>
+  </div>
+</header>
+
+<div class="wave"></div>
+
+<div class="controls">
+  <button id="runBtn">▶ شغّل</button>
+  <select id="examples">
+    <option value="">— اختر مثال —</option>
+    <option value="basics">أساسيات (متغيرات، شرط، حلقة)</option>
+    <option value="func">دالة بسطر واحد</option>
+    <option value="class">كلاس (Point)</option>
+    <option value="try">try / catch / fail</option>
+    <option value="loop">حلقة على قائمة + دمج نصوص</option>
+  </select>
+</div>
+
+<main>
+  <div class="panel">
+    <div class="panel-head"><h2>محرر RIO</h2><div class="dots"><span></span><span></span><span></span></div></div>
+    <textarea id="code" spellcheck="false"></textarea>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h2>الناتج</h2><div class="dots"><span></span><span></span><span></span></div></div>
+    <div id="output">اضغط "شغّل" لترى الناتج هنا...</div>
+  </div>
+</main>
+
+<div class="note">
+  <b>ملاحظة صادقة:</b> هذي نسخة مستقلة عن نسخة بايثون الأصلية — بنفس نحو RIO تقريباً، لكن الهدف هنا JavaScript مباشرة (يشتغل بالمتصفح فوراً). بعض الفروقات الطبيعية بين اللغتين موجودة (مثلاً القسمة على صفر بجافاسكربت ترجع <code>Infinity</code> بدل رمي خطأ زي بايثون). الاستيراد (<code>import</code>) ونظام <code>use</code> لملفات RIO أخرى غير مدعومين بهذي النسخة بعد.
+</div>
+
+<script>
+"use strict";
+
+// ============================================================
+// نفس منطق مترجم RIO -> JavaScript (مُختبر مسبقاً بـNode.js)
+// ============================================================
+const IDENT_RE = "[A-Za-z_][A-Za-z0-9_]*";
+class RioError extends Error {}
+
+function stripComment(line) {
+  let inStr = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') inStr = !inStr;
+    if (ch === "#" && !inStr) return line.slice(0, i);
+  }
+  return line;
+}
+function getIndent(line) {
+  const expanded = line.replace(/\t/g, "    ");
+  return expanded.length - expanded.replace(/^ +/, "").length;
+}
+function interpolate(text) {
+  return text.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"/g, (whole, content, offset) => {
+    const alreadyTemplate = offset > 0 && text[offset - 1] === "`";
+    if (alreadyTemplate || !content.includes("{")) return whole;
+    const body = content.replace(/\{([^}]*)\}/g, (_, expr) => "${" + expr + "}");
+    return "`" + body + "`";
+  });
+}
+function parseToLogicalLines(source) {
+  const lines = source.split("\n");
+  const logical = [];
+  const blockStack = [];
+  for (let rawIdx = 0; rawIdx < lines.length; rawIdx++) {
+    const lineNo = rawIdx + 1;
+    const line = stripComment(lines[rawIdx].replace(/\t/g, "    ")).replace(/\s+$/, "");
+    if (line.trim() === "") { logical.push({ blank: true }); continue; }
+    const indentLen = getIndent(line);
+    const stripped = line.trim();
+    const low = stripped.toLowerCase();
+    while (blockStack.length && indentLen <= blockStack[blockStack.length - 1][0]) blockStack.pop();
+    const insideCls = blockStack.some(([, k]) => k === "cls");
+    const push = (code, opens) => {
+      let finalCode = insideCls ? code.replace(/\bme\b/g, "this") : code;
+      logical.push({ indentLen, code: interpolate(finalCode), opens: opens || null });
+      if (opens) blockStack.push([indentLen, opens]);
+    };
+    let m;
+    if ((m = stripped.match(new RegExp(`^cls\\s+(${IDENT_RE})\\s*:\\s*$`, "i")))) { push(`class ${m[1]} {`, "cls"); continue; }
+    if ((m = stripped.match(/^new\s*\((.*)\)\s*:\s*$/i)) && blockStack.length && blockStack[blockStack.length - 1][1] === "cls") {
+      push(`constructor(${m[1].trim()}) {`, "fanc"); continue;
+    }
+    if ((m = stripped.match(new RegExp(`^fanc\\s+(${IDENT_RE})\\s*\\((.*)\\)\\s*:\\s*$`, "i"))) && blockStack.length && blockStack[blockStack.length - 1][1] === "cls") {
+      push(`${m[1]}(${m[2].trim()}) {`, "fanc"); continue;
+    }
+    if ((m = stripped.match(new RegExp(`^fanc\\s+(${IDENT_RE})\\s*\\((.*)\\)\\s*=\\s*(.+)$`, "i")))) {
+      const [, name, args, expr] = m;
+      if (blockStack.length && blockStack[blockStack.length - 1][1] === "cls") push(`${name}(${args}) { return ${expr}; }`);
+      else push(`function ${name}(${args}) { return ${expr}; }`);
+      continue;
+    }
+    if ((m = stripped.match(new RegExp(`^fanc\\s+(${IDENT_RE})\\s*\\((.*)\\)\\s*:\\s*$`, "i")))) { push(`function ${m[1]}(${m[2]}) {`, "fanc"); continue; }
+    if (low === "return") { push("return;"); continue; }
+    if (low.startsWith("return ")) { push(`return ${stripped.slice(7)};`); continue; }
+    if (low === "try:") { push("try {", "try"); continue; }
+    if ((m = stripped.match(new RegExp(`^catch\\s+(${IDENT_RE})\\s*:\\s*$`, "i")))) { push(`catch (${m[1]}) {`, "catch"); continue; }
+    if (low === "catch:") { push("catch (_e) {", "catch"); continue; }
+    if (low === "finally:") { push("finally {", "finally"); continue; }
+    if (low === "fail") { push("throw new Error();"); continue; }
+    if (low.startsWith("fail ")) { push(`throw new Error(${stripped.slice(5).trim()});`); continue; }
+    if ((m = stripped.match(new RegExp(`^input\\s+(${IDENT_RE})\\s*(.*)$`, "i")))) {
+      const [, v, rest] = m; push(`let ${v} = prompt(${rest.trim() || '""'});`); continue;
+    }
+    if ((m = stripped.match(new RegExp(`^rep\\s+(${IDENT_RE})\\s+in\\s+(.+?)\\.\\.(.+?):\\s*$`, "i")))) {
+      const [, v, a, b] = m; push(`for (let ${v} = ${a}; ${v} <= (${b}); ${v}++) {`, "rep"); continue;
+    }
+    if ((m = stripped.match(new RegExp(`^rep\\s+(${IDENT_RE})\\s+in\\s+(.+?):\\s*$`, "i")))) {
+      const [, v, it] = m; push(`for (const ${v} of ${it}) {`, "rep"); continue;
+    }
+    if ((m = stripped.match(/^rep\s+(\S+)\s*\((.*)\)\s*$/i))) {
+      push(`for (let _i = 0; _i < (${m[1]}); _i++) { console.log(${m[2]}); }`); continue;
+    }
+    if ((m = stripped.match(/^while\s+(.+?):\s*$/i))) { push(`while (${m[1]}) {`, "while"); continue; }
+    if ((m = stripped.match(/^if\s+(.+?):\s*$/i))) { push(`if (${m[1]}) {`, "if"); continue; }
+    if ((m = stripped.match(/^elif\s+(.+?):\s*$/i))) { push(`else if (${m[1]}) {`, "if"); continue; }
+    if (low === "else:") { push("else {", "if"); continue; }
+    if (low === "prn" || low.startsWith("prn ")) {
+      const expr = low === "prn" ? '""' : stripped.slice(3).trim();
+      push(`console.log(${expr});`); continue;
+    }
+    if (low.startsWith("prt ")) { push(`console.log(${stripped.slice(3).trim()});`); continue; }
+    if ((m = stripped.match(new RegExp(`^set\\s+(${IDENT_RE})\\s*=\\s*(.+)$`, "i")))) { push(`let ${m[1]} = ${m[2]};`); continue; }
+    if ((m = stripped.match(new RegExp(`^(${IDENT_RE})\\s*=\\s*(.+)$`))) &&
+        !["if","elif","while","fanc","rep","set","cls","new","catch"].includes(m[1].toLowerCase())) {
+      push(`${m[1]} = ${m[2]};`); continue;
+    }
+    if (stripped.match(new RegExp(`^${IDENT_RE}(\\.${IDENT_RE})*\\s*\\(.*\\)\\s*$`)) ||
+        stripped.match(new RegExp(`^${IDENT_RE}(\\.${IDENT_RE}|\\[[^\\]]+\\])+\\s*=\\s*.+$`))) {
+      push(`${stripped};`); continue;
+    }
+    throw new RioError(`سطر غير مفهوم بنحو RIO (سطر ${lineNo}): ${JSON.stringify(stripped)}`);
+  }
+  return logical;
+}
+function emitBraces(logical) {
+  const out = []; const stack = [];
+  for (const item of logical) {
+    if (item.blank) { out.push(""); continue; }
+    const { indentLen, code } = item;
+    while (stack.length && indentLen <= stack[stack.length - 1]) { stack.pop(); out.push("  ".repeat(stack.length) + "}"); }
+    out.push("  ".repeat(stack.length) + code);
+    if (item.opens) stack.push(indentLen);
+  }
+  while (stack.length) { stack.pop(); out.push("  ".repeat(stack.length) + "}"); }
+  return out.join("\n");
+}
+function transpile(source) {
+  const logical = parseToLogicalLines(source);
+  const classNames = new Set();
+  for (const item of logical) {
+    if (!item.blank && item.opens === "cls") {
+      const m = item.code.match(/^class\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{/);
+      if (m) classNames.add(m[1]);
+    }
+  }
+  let code = emitBraces(logical) + "\n";
+  for (const name of classNames) {
+    const re = new RegExp(`(^|[^.\\w])(?<!new )${name}\\s*\\(`, "g");
+    code = code.replace(re, (whole, prefix) => `${prefix}new ${name}(`);
+  }
+  return code;
+}
+
+// ============================================================
+// واجهة المستخدم
+// ============================================================
+const EXAMPLES = {
+  basics: `x = 5\nif x > 3:\n    prn "كبير"\nelse:\n    prn "صغير"\n\nrep i in 1..5:\n    prn i`,
+  func: `fanc square(n) = n * n\nprn square(6)`,
+  class: `cls Point:\n    new(x, y):\n        me.x = x\n        me.y = y\n    fanc sum():\n        return me.x + me.y\n\np = Point(3, 4)\nprn p.sum()`,
+  try: `fanc check(n):\n    if n < 0:\n        fail "سالب!"\n    return n\n\ntry:\n    prn check(-5)\ncatch e:\n    prn "خطأ: {e}"`,
+  loop: `names = ["سارة", "علي"]\nrep name in names:\n    prn "مرحباً {name}"`,
+};
+
+const codeEl = document.getElementById("code");
+const outEl = document.getElementById("output");
+codeEl.value = EXAMPLES.basics;
+
+document.getElementById("examples").addEventListener("change", (e) => {
+  if (e.target.value) codeEl.value = EXAMPLES[e.target.value];
+});
+
+document.getElementById("runBtn").addEventListener("click", () => {
+  const src = codeEl.value;
+  outEl.innerHTML = "";
+  let js;
+  try {
+    js = transpile(src);
+  } catch (err) {
+    outEl.innerHTML = `<span class="line-err">✗ ${err.message}</span>`;
+    return;
+  }
+
+  const codeBlock = document.createElement("span");
+  codeBlock.className = "js-code";
+  codeBlock.textContent = js;
+  outEl.appendChild(codeBlock);
+
+  const logs = [];
+  const originalLog = console.log;
+  console.log = (...args) => logs.push(args.map(String).join(" "));
+
+  try {
+    // eslint-disable-next-line no-eval
+    (0, eval)(js);
+    const resultLine = document.createElement("div");
+    resultLine.className = "line-ok";
+    resultLine.textContent = logs.join("\n") || "(بدون ناتج)";
+    outEl.appendChild(resultLine);
+  } catch (err) {
+    if (logs.length) {
+      const okPart = document.createElement("div");
+      okPart.className = "line-ok";
+      okPart.textContent = logs.join("\n");
+      outEl.appendChild(okPart);
+    }
+    const errLine = document.createElement("div");
+    errLine.className = "line-err";
+    errLine.textContent = "✗ " + err.message;
+    outEl.appendChild(errLine);
+  } finally {
+    console.log = originalLog;
+  }
+});
+</script>
+
+</body>
+</html>
