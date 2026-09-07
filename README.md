@@ -1,22 +1,22 @@
 # RIO Programming Language
 
-> لغة برمجة بسيطة وقابلة للقراءة تُترجم إلى Python.
+> A simple, readable programming language that compiles to Python.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status: Experimental](https://img.shields.io/badge/status-experimental-orange.svg)](https://github.com/abidinfan8-wq/Rio-n-programming-language)
 [![Version](https://img.shields.io/badge/version-5.1-blue.svg)](https://github.com/abidinfan8-wq/Rio-n-programming-language/releases)
 
-## ما هي RIO؟
+## What is RIO?
 
-RIO لغة برمجة ذات نحو مختصر وواضح. يقوم المترجم بتحويل برامج RIO إلى Python صالح للتنفيذ، مما يتيح الاستفادة من مكتبات Python مع الحفاظ على نحو RIO.
+RIO is a programming language with concise, clear syntax. The compiler converts RIO programs into executable Python code, allowing you to use Python libraries while retaining RIO syntax.
 
-المشروع حاليًا تجريبي، ويجري تطوير RIO 6 باستخدام Lexer وParser وAST ومكتبة قياسية ومدير حزم.
+The project is currently experimental. RIO 6 is under development and will include a Lexer, Parser, AST, standard library, and package manager.
 
-## مثال سريع
+## Quick Example
 
 ```rio
 fanc greet(name):
-    return "مرحبًا {name}!"
+    return "Hello {name}!"
 
 prn greet("RIO")
 
@@ -24,62 +24,62 @@ rep i in 1..3:
     prn i
 ```
 
-## الميزات
+## Features
 
-- متغيرات وعمليات حسابية.
-- شروط `if` و`elif` و`else`.
-- حلقات `rep` و`while`.
-- دوال باستخدام `fanc`.
-- كلاسات ومنشئات باستخدام `cls` و`new`.
-- معالجة الأخطاء باستخدام `try` و`catch` و`finally`.
-- دمج النصوص تلقائيًا باستخدام `{expression}`.
-- إمكانية استخدام مكتبات Python.
-- رسائل خطأ مناسبة للمبتدئين.
+- Variables and arithmetic operations.
+- `if`, `elif`, and `else` conditionals.
+- `rep` and `while` loops.
+- Functions using `fanc`.
+- Classes and constructors using `cls` and `new`.
+- Error handling using `try`, `catch`, and `finally`.
+- Automatic string interpolation using `{expression}`.
+- The ability to use Python libraries.
+- Beginner-friendly error messages.
 
-## المتطلبات
+## Requirements
 
-- Python 3.6 أو أحدث في RIO 5.
-- لا توجد تبعيات خارجية مطلوبة للنسخة الأساسية.
+- Python 3.6 or later for RIO 5.
+- No external dependencies are required for the core version.
 
-## التشغيل
+## Usage
 
 ```bash
 python3 rio-5.py examples/hello.rio --run
 ```
 
-## حالة المشروع
+## Project Status
 
-| الإصدار | الحالة |
+| Version | Status |
 |---|---|
-| RIO 5.1 | نسخة تجريبية قابلة للاستخدام |
-| RIO 6 | قيد التطوير |
+| RIO 5.1 | Usable experimental release |
+| RIO 6 | Under development |
 
-## خارطة RIO 6
+## RIO 6 Roadmap
 
-- Lexer كامل.
-- Parser وAST.
-- محلل دلالي.
-- رسائل أخطاء مرتبطة بملف RIO الأصلي.
-- مكتبة قياسية خاصة بـ RIO.
-- مدير حزم.
-- اختبارات آلية وتوثيق موسع.
+- Full Lexer.
+- Parser and AST.
+- Semantic analyzer.
+- Error messages linked to the original RIO file.
+- A dedicated RIO standard library.
+- Package manager.
+- Automated tests and expanded documentation.
 
-## المساهمة
+## Contributing
 
-الاقتراحات، الأمثلة، التوثيق، وطلبات السحب مرحب بها. اقرأ [دليل المساهمة](CONTRIBUTING.md) قبل إرسال التغييرات.
+Suggestions, examples, documentation, and pull requests are welcome. Please read the [contribution guide](CONTRIBUTING.md) before submitting changes.
 
-## الأمان
+## Security
 
-لا تشغل ملفات RIO غير موثوقة؛ فهي تستطيع استخدام وظائف Python والمكتبات المستوردة. راجع [سياسة الأمان](SECURITY.md).
+Do not run untrusted RIO files; they can use Python functions and imported libraries. See the [security policy](SECURITY.md).
 
-## الترخيص
+## License
 
-هذا المشروع مرخص تحت [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
 
-## روابط
+## Links
 
-- [دليل الصياغة](docs/SYNTAX.md)
-- [خارطة الطريق](ROADMAP.md)
-- [سجل التغييرات](CHANGELOG.md)
-- [المساهمة](CONTRIBUTING.md)
-- [المستودع على GitHub](https://github.com/abidinfan8-wq/Rio-n-programming-language)
+- [Syntax Guide](docs/SYNTAX.md)
+- [Roadmap](ROADMAP.md)
+- [Changelog](CHANGELOG.md)
+- [Contributing](CONTRIBUTING.md)
+- [GitHub Repository](https://github.com/abidinfan8-wq/Rio-n-programming-language)
